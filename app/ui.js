@@ -1013,20 +1013,21 @@ const UI = {
             // password = undefined;
 
             let defaultPassword = undefined;
-            try {
-                let url = "./package.json"
-                let request = new XMLHttpRequest();
-                request.open("get", url);
-                request.send(null);
-                request.onload = function () {
-                    if (request.status == 200) {
-                        let packageInfo = JSON.parse(request.responseText);
-                        defaultPassword = packageInfo.defaultPassword;
-                    }
-                }
-            } catch (error) {
-                Log.Error("Couldn't fetch package.json: " + err);
-            }
+            defaultPassword = new Promise((resolve, reject) => {
+                fetch('./package.json')
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw Error("" + response.status + " " + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then((packageInfo) => {
+                        resolve(packageInfo.defaultPassword);
+                    })
+                    .catch((err) => {
+                        Log.Error("Couldn't fetch package.json: " + err);
+                    });
+            });
 
             password = defaultPassword;
         }
