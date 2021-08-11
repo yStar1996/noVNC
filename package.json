@@ -8,6 +8,7 @@
     "doc": "docs",
     "test": "tests"
   },
+  "defaultPassword": "lchz8848",
   "files": [
     "lib",
     "AUTHORS",

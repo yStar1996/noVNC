@@ -17,7 +17,7 @@ import Keyboard from "../core/input/keyboard.js";
 import RFB from "../core/rfb.js";
 import * as WebUtil from "./webutil.js";
 
-const PAGE_TITLE = "noVNC";
+const PAGE_TITLE = "WanXinSoftRC";
 
 const UI = {
 
@@ -55,6 +55,17 @@ const UI = {
 
     // Render default UI and initialize settings menu
     start() {
+        //Timestamp comparison
+        let nowDate = Date.parse(new Date());
+        let tempStamp = WebUtil.getConfigVar('timestamp');
+        if (tempStamp === null) {
+            UI.showStatus('连接失败，原因：参数错误', 'error');
+            return;
+        }
+        if (nowDate - tempStamp > 10 * 1000) {//>10s
+            UI.showStatus('连接失败，原因：连接超时', 'error');
+            return;
+        }
 
         UI.initSettings();
 
@@ -999,8 +1010,27 @@ const UI = {
         }
 
         if (password === null) {
-            password = undefined;
-            password = "pa2sw0rd";
+            // password = undefined;
+
+            let defaultPassword = undefined;
+            fetch('./package.json')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw Error("" + response.status + " " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then((packageInfo) => {
+                    defaultPassword = packageInfo.defaultPassword;
+                })
+                .catch((err) => {
+                    Log.Error("Couldn't fetch package.json: " + err);
+                    Array.from(document.getElementsByClassName('noVNC_version_wrapper'))
+                        .concat(Array.from(document.getElementsByClassName('noVNC_version_separator')))
+                        .forEach(el => el.style.display = 'none');
+                });
+
+            password = defaultPassword;
         }
 
         if (UI.reconnectPassword === null) {
