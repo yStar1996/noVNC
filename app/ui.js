@@ -41,11 +41,8 @@ const UI = {
     reconnectCallback: null,
     reconnectPassword: null,
 
-    configParam: null,
-
     prime() {
-        return WebUtil.initSettings().then(WebUtil.getConfigParam()).then((data) => {
-            UI.configParam = data;
+        return WebUtil.initSettings().then(() => {
             if (document.readyState === "interactive" || document.readyState === "complete") {
                 return UI.start();
             }
@@ -1014,9 +1011,7 @@ const UI = {
 
         if (password === null) {
             // password = undefined;
-            if (UI.configParam !== null) {
-                password = UI.configParam.defaultPassword;
-            }
+           password="lchz8848";
         }
 
         if (UI.reconnectPassword === null) {
