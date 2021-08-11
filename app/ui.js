@@ -1013,22 +1013,15 @@ const UI = {
             // password = undefined;
 
             let defaultPassword = undefined;
-            await fetch('./package.json')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw Error("" + response.status + " " + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then((packageInfo) => {
+            try {
+                let resp = await fetch('./package.json');
+                let packageInfo = resp.json();
+                if (data != null) {
                     defaultPassword = packageInfo.defaultPassword;
-                })
-                .catch((err) => {
-                    Log.Error("Couldn't fetch package.json: " + err);
-                    Array.from(document.getElementsByClassName('noVNC_version_wrapper'))
-                        .concat(Array.from(document.getElementsByClassName('noVNC_version_separator')))
-                        .forEach(el => el.style.display = 'none');
-                });
+                }
+            } catch (error) {
+                Log.Error("Couldn't fetch package.json: " + err);
+            }
 
             password = defaultPassword;
         }
