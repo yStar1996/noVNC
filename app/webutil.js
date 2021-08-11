@@ -175,3 +175,22 @@ export function eraseSetting(name) {
         localStorage.removeItem(name);
     }
 }
+
+export function getConfigParam() {
+    let configParam = new Promise((resolve, reject) => {
+        fetch('./package.json')
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error("" + response.status + " " + response.statusText);
+                }
+                return response.json();
+            })
+            .then((packageInfo) => {
+                resolve(packageInfo);
+            })
+            .catch((err) => {
+                Log.Error("Couldn't fetch package.json: " + err);
+            });
+    });
+    return configParam;
+}

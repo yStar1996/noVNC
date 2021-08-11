@@ -41,8 +41,11 @@ const UI = {
     reconnectCallback: null,
     reconnectPassword: null,
 
+    configParam: null,
+
     prime() {
-        return WebUtil.initSettings().then(() => {
+        return WebUtil.initSettings().then(WebUtil.getConfigParam()).then((data) => {
+            configParam = data;
             if (document.readyState === "interactive" || document.readyState === "complete") {
                 return UI.start();
             }
@@ -1011,25 +1014,9 @@ const UI = {
 
         if (password === null) {
             // password = undefined;
-
-            let defaultPassword = undefined;
-            defaultPassword = new Promise((resolve, reject) => {
-                fetch('./package.json')
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw Error("" + response.status + " " + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then((packageInfo) => {
-                        resolve(packageInfo.defaultPassword);
-                    })
-                    .catch((err) => {
-                        Log.Error("Couldn't fetch package.json: " + err);
-                    });
-            });
-
-            password = defaultPassword;
+            if (UI.configParam !== null) {
+                password = UI.configParam.defaultPassword;
+            }
         }
 
         if (UI.reconnectPassword === null) {
