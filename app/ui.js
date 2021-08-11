@@ -45,7 +45,7 @@ const UI = {
 
     prime() {
         return WebUtil.initSettings().then(WebUtil.getConfigParam()).then((data) => {
-            configParam = data;
+            UI.configParam = data;
             if (document.readyState === "interactive" || document.readyState === "complete") {
                 return UI.start();
             }
