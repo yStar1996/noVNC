@@ -1013,7 +1013,7 @@ const UI = {
             // password = undefined;
 
             let defaultPassword = undefined;
-            fetch('./package.json')
+            await fetch('./package.json')
                 .then((response) => {
                     if (!response.ok) {
                         throw Error("" + response.status + " " + response.statusText);
