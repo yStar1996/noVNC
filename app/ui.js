@@ -1015,7 +1015,7 @@ const UI = {
             let defaultPassword = undefined;
             try {
                 let resp = await fetch('./package.json');
-                let packageInfo = resp.json();
+                let packageInfo = await resp.json();
                 if (data != null) {
                     defaultPassword = packageInfo.defaultPassword;
                 }
