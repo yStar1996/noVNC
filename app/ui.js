@@ -1014,10 +1014,15 @@ const UI = {
 
             let defaultPassword = undefined;
             try {
-                let resp = await fetch('./package.json');
-                let packageInfo = await resp.json();
-                if (data != null) {
-                    defaultPassword = packageInfo.defaultPassword;
+                let url = "./package.json"
+                let request = new XMLHttpRequest();
+                request.open("get", url);
+                request.send(null);
+                request.onload = function () {
+                    if (request.status == 200) {
+                        let packageInfo = JSON.parse(request.responseText);
+                        defaultPassword = packageInfo.defaultPassword;
+                    }
                 }
             } catch (error) {
                 Log.Error("Couldn't fetch package.json: " + err);
